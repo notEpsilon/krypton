@@ -1,5 +1,5 @@
 # Krypton
 
-![krypton image](https://gcdn.pbrd.co/images/yfQ3j1RFcO3s.png?o=1)  
+![krypton image](https://gcdn.pbrd.co/images/yfQ3j1RFcO3s.png?o=1)<br/><br/>
 
 Krypton is a modern solution to university registration systems with cloud-based document-oriented NoSQL database that scales automatically.
