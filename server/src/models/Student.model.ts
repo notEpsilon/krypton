@@ -1,6 +1,7 @@
 import User from '../models/User.model';
 
 export interface StudentInfo extends User {
+    gpa: int;
     faculty: string;
     department: string;
     courses: Array<string>;
