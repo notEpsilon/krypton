@@ -1,28 +1,29 @@
-export type StudentInfo = {
-    userID: string
-    password: string
-    isVerified: boolean
-    type?: 0
+import User from '../models/User.model';
+
+export interface StudentInfo extends User {
+    faculty: string;
+    department: string;
+    courses: Array<string>;
+    type?: 0;
 };
 
 export default class Student {
-    public userID: string = "";
-    public password: string = "";
-    public isVerified: boolean = false;
+    private studentInfo: StudentInfo;
     public static readonly type: 0 = 0;
 
     constructor(student: StudentInfo) {
-        this.userID = student.userID;
-        this.password = student.password;
-        this.isVerified = student.isVerified;
+        this.studentInfo = student;
+
+        if (this.studentInfo.isVerified === undefined) {
+            this.studentInfo.isVerified = false;
+        }
+
+        if (this.studentInfo.type === undefined) {
+            this.studentInfo.type = 0;
+        }
     }
 
     public info(): StudentInfo {
-        return {
-            userID: this.userID,
-            password: this.password,
-            isVerified: this.isVerified,
-            type: Student.type
-        };
+        return this.studentInfo;
     }
 }
