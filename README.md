@@ -4,24 +4,12 @@
 
 Krypton is a modern solution to university registration systems with cloud-based document-oriented NoSQL database that scales automatically.
 
-<br/>
-<hr/>
-<br/>
-
 ## Usage
-clone the repository into your machine and `cd server/` and run `npm ci` then change directory into client
+clone the repository into your machine and `cd server/` and run `npm ci` then change directory into client<br>
 `cd client/` and run `npm ci`, now you just need to add a `.env` file into the `server` folder which holds
-the `firebase configuration keys`.
-
-<br/>
-<hr/>
-<br/>
+the<br> `firebase configuration keys`.
 
 1. to initialize the server run go to the `server/` directory and run `npm run compile`.
-
-<br/>
-<hr/>
-<br/>
 
 ## Credits / Contributors
 
