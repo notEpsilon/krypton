@@ -9,7 +9,7 @@ clone the repository into your machine and `cd server/` and run `npm ci` then ch
 `cd client/` and run `npm ci`, now you just need to add a `.env` file into the `server` folder which holds
 the<br> `firebase configuration keys`.
 
-1. to initialize the server run go to the `server/` directory and run `npm run compile`.
+1. to initialize the server go to the `server/` directory and run `npm run compile`.
 
 ## Credits / Contributors
 
