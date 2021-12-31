@@ -3,6 +3,7 @@ import User from '../models/User.model';
 export interface StudentInfo extends User {
     faculty: string;
     department: string;
+    gpa: number;
     courses: Array<string>;
     type?: 0;
 };
