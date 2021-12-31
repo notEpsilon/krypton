@@ -1,7 +1,6 @@
 import User from '../models/User.model';
 
 export interface ProfessorInfo extends User {
-    profID: number;
     salary: number;
     faculty: string;
     department: string;
