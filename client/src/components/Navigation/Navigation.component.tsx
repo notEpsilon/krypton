@@ -23,8 +23,8 @@ const Navigation: React.FC = () => (
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
                 <Nav>
-                    <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
-                    <Nav.Link as={Link} to="/login">Log In</Nav.Link>
+                    <Nav.Link as={Link} to="/signup" href="/signup">Sign Up</Nav.Link>
+                    <Nav.Link as={Link} to="/login" href="/login">Log In</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Container>
