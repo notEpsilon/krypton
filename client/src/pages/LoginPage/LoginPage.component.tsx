@@ -1,9 +1,14 @@
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
-const LoginPage: React.FC = () => (
-    <div className="login-page">
+interface IProps {
+    navHeight: number;
+};
+
+const LoginPage: React.FC<IProps> = ({ navHeight }) => (
+    <Container className="login-page" style={{ height: `calc(100vh - ${navHeight}px)` }}>
         Login Page
-    </div>
+    </Container>
 );
 
 export default LoginPage;
