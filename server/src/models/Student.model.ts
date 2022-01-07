@@ -1,10 +1,12 @@
 import User from '../models/User.model';
+import Course from './Course.model';
 
 export interface StudentInfo extends User {
+    email: string;
     faculty: string;
     department: string;
     gpa: number;
-    courses: Array<string>;
+    courseArray?: Array<Course>;    
     type?: 0;
 };
 
@@ -22,9 +24,18 @@ export default class Student {
         if (this.studentInfo.type === undefined) {
             this.studentInfo.type = 0;
         }
+
+        if(this.studentInfo.courseArray === undefined){
+            this.studentInfo.courseArray = [];
+        }
     }
 
     public info(): StudentInfo {
         return this.studentInfo;
+    }
+
+    public addCourse(course:Course):void{
+        this.studentInfo.courseArray?.push(course);
+        course.addStudent(this);
     }
 }
