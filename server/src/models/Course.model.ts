@@ -3,15 +3,15 @@ import Student from "./Student.model";
 
 export interface CourseInfo {
     code: string;
-    departmentsAvailable: Array<string>;
+    departmentsAvailableIn: Array<string>;
     professorArray?: Array<Professor>;
     studentArray?: Array<studentCourseData>;
     courseTotalSessions:Number;
+    availableSeat:Number;
 };
 
 export default class Course {
     private courseInfo: CourseInfo;
-    public static readonly type: 0 = 0;
 
     constructor(course: CourseInfo) {
         this.courseInfo = course;  
@@ -46,6 +46,7 @@ interface StudentData{
     studentGrade: number,
     student:Student
 }
+
 class studentCourseData{
     private studentData: StudentData;
     constructor(student:Student){
