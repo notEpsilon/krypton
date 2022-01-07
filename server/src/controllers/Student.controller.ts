@@ -16,7 +16,7 @@ import {
 
 const getAllStudents = async (req: Request, res: Response) => {
     try {
-        const colRef = collection(firestore, 'students') as CollectionReference<StudentInfo>;
+        const colRef = collection(firestore, 'pendingStudents') as CollectionReference<StudentInfo>;
 
         const snapshot = await getDocs(colRef);
 

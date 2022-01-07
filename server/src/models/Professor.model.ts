@@ -2,6 +2,7 @@ import User from '../models/User.model';
 import Course from './Course.model';
 
 export interface ProfessorInfo extends User {
+    email: string;
     salary: number;
     faculty: string;
     department: string;

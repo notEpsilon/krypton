@@ -5,7 +5,8 @@ export interface CourseInfo {
     code: string;
     departmentsAvailable: Array<string>;
     professorArray?: Array<Professor>;
-    studentArray?: Array<studentData>;
+    studentArray?: Array<studentCourseData>;
+    courseTotalSessions:Number;
 };
 
 export default class Course {
@@ -13,7 +14,8 @@ export default class Course {
     public static readonly type: 0 = 0;
 
     constructor(course: CourseInfo) {
-        this.courseInfo = course;
+        this.courseInfo = course;  
+        this.courseInfo.courseTotalSessions = 0;
 
         if(this.courseInfo.studentArray === undefined){
             this.courseInfo.studentArray = [];
@@ -22,6 +24,7 @@ export default class Course {
         if(this.courseInfo.professorArray === undefined){
             this.courseInfo.professorArray = [];
         }
+
     }
 
     public info(): CourseInfo {
@@ -29,7 +32,7 @@ export default class Course {
     }
 
     public addStudent(student:Student):void{
-        let temp = new studentData(student);
+        let temp = new studentCourseData(student);
         this.courseInfo.studentArray?.push(temp);
     }
 
@@ -39,14 +42,28 @@ export default class Course {
 }
 
 interface StudentData{
-    studentAttendance: Number,
-    studentGrade: Number,
+    studentAttendance: number,
+    studentGrade: number,
     student:Student
 }
-class studentData{
+class studentCourseData{
+    private studentData: StudentData;
     constructor(student:Student){
+        this.studentData = {
+            studentAttendance: 0,
+            studentGrade: 0,
+            student: student
+        }
         //TODO: Make the student info only accessable by the professor so that the professor 
         //can change the data with functions in his model
         //TODO: Redesign this mess after a good sleep
+    }
+    
+    public addStudentAttendance():void{
+        this.studentData.studentAttendance += 1;
+    }
+    
+    public setStudentGrade(grade:number):void{
+        this.studentData.studentGrade = grade;
     }
 }
