@@ -38,4 +38,28 @@ studentRouter.put('/:email', studentController.updateStudent);
 */
 studentRouter.delete('/:email', studentController.deleteStudent);
 
+/**
+ * @description Get all courses the students is in
+ * @route /users/students/:email/course
+ * @method GET
+*/
+
+/**
+ * @description Get a specific course
+ * @route /users/students/:email/course/:code
+ * @method GET
+*/
+
+/**
+ * @description Get all available courses a student can register in
+ * @route /users/students/:email/course/available
+ * @method GET
+*/
+
+/**
+ * @description Join a course
+ * @route /users/students/:email/course/available/:code
+ * @method PUT
+*/
+
 export default studentRouter;

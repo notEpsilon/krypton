@@ -39,4 +39,37 @@ professorRouter.put('/:email', professorController.updateProfessor);
 */
 professorRouter.delete('/:email', professorController.deleteProfessor);
 
+/**
+ * @description Get all courses the professor teaches
+ * @route /users/professors/:email/course
+ * @method GET
+ */
+
+/**
+ * @description Get all courses the professor teaches
+ * @route /users/professors/:email/course
+ * @method GET
+ */
+
+/**
+ * @description Get a specific coure the professor teaches
+ * @route /users/professors/:email/course/:code
+ * @method GET
+ */
+
+/**
+ * @description Get all available courses the professor can teach in
+ * @route /users/professors/:email/course/available
+ * @method GET
+ */
+
+/**
+ * @description Join an available course
+ * @route /users/professors/:email/course/available/:code
+ * @method PUT
+ */
+
+
+
+
 export default professorRouter;

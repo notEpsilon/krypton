@@ -3,11 +3,12 @@ import Student from "./Student.model";
 
 export interface CourseInfo {
     code: string;
+    name: string;
     departmentsAvailableIn: Array<string>;
-    professorArray?: Array<Professor>;
-    studentArray?: Array<studentCourseData>;
     courseTotalSessions:Number;
     availableSeat:Number;
+    professorArray?: Array<Professor>;
+    studentArray?: Array<studentCourseData>;
 };
 
 export default class Course {

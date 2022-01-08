@@ -1,7 +1,7 @@
 import express from 'express';
 import professorRouter from './routes/Proffessor.route';
 import studentRouter from './routes/Student.route';
-import courseRouter from './routes/Controller.route';
+import courseRouter from './routes/Course.route';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
