@@ -11,6 +11,6 @@ app.use(express.json());
 /** Routing Middlewares */
 app.use('/users/students', studentRouter);
 app.use('/users/professors', professorRouter);
-app.use('/users/courses',courseRouter);
+app.use('/courses',courseRouter);
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}...`));

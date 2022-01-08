@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ProfessorInfo } from '../models/Professor.model';
 import { firestore } from '../firebase/firebase.util';
 import Professor from '../models/Professor.model';
@@ -13,6 +13,7 @@ import {
     deleteDoc,
     DocumentReference
 } from 'firebase/firestore';
+import { CourseInfo } from '../models/Course.model';
 
 
 const getAllProfessors = async (req: Request, res: Response) => {
@@ -31,7 +32,7 @@ const getAllProfessors = async (req: Request, res: Response) => {
     }
 };
 
-const getSingleProfessor = async (req: Request, res: Response) => {
+const getSingleProfessor = async (req: Request, res: Response,next: NextFunction) => {
     const { email } = req.params;
 
     try {
@@ -40,7 +41,12 @@ const getSingleProfessor = async (req: Request, res: Response) => {
         if (!professorDoc.exists())
             return res.status(404).send("Professor Not Found.");
 
-        res.status(200).send(professorDoc.data());
+        res.locals.professorData = professorDoc.data();
+        if(!req.originalUrl.includes("/course")){
+            res.status(200).send(res.locals.professorData);
+        }
+        next();
+
     }
     catch (err) {
         res.status(500).send(`Error Retrieving The Professor, error: ${err}`);
@@ -63,8 +69,15 @@ const addProfessor = async (req: Request, res: Response) => {
 };
 
 const updateProfessor = async (req: Request, res: Response) => {
-    const updatedProfessor = new Professor({ ...req.body }).info();
-    const { email } = req.params;
+    let updatedProfessor,email;
+    if (!req.originalUrl.includes("/course/")) {
+        updatedProfessor = new Professor({ ...req.body }).info();
+        email = req.params.email;
+    }
+    else{
+        updatedProfessor = res.locals.userData.info();
+        email = updatedProfessor.code;
+    }
 
     try {
         const docRef = doc(firestore, 'professors', email) as DocumentReference<ProfessorInfo>;
@@ -107,12 +120,52 @@ const deleteProfessor = async (req: Request, res: Response) => {
     }
 };
 
+const getAllProfessorCourses = (req: Request, res: Response, next:NextFunction) => {
+    try {
+        if(res.locals.professorData){
+            res.status(200).send(res.locals.professorData.courseArray);
+        }
+        else{
+            res.status(500).send("Error Retrieving Courses")
+        }
+        next();
+    } 
+    catch (err) {
+        res.status(500).send(`Error Retrieving All Professor's Courses, error: ${err}`)
+    }
+}
+
+const getSingleProfessorCourse = async (req: Request, res: Response,next:NextFunction) => {
+    const { code } = req.params;
+    try {
+        if(res.locals.professorData){
+            const courseArray:Array<CourseInfo>= res.locals.professorData.courseArray;
+            courseArray.forEach((course)=>{
+                if(course.code===code){
+                    res.status(200).send(course);
+                    }
+                })
+            res.status(400).send("Course not found");
+            }
+        else{
+            res.status(500).send("Error Retrieving Courses")
+        }
+        next();
+    } 
+    catch (err) {
+        res.status(500).send(`Error Retrieving Professor's Course, error: ${err}`)
+    }
+}
+
+
 const professorController = {
     getAllProfessors,
     getSingleProfessor,
     addProfessor,
     updateProfessor,
-    deleteProfessor
+    deleteProfessor,
+    getAllProfessorCourses,
+    getSingleProfessorCourse
 };
 
 export default professorController;

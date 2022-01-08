@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { firestore } from '../firebase/firebase.util';
 import {
     collection,
@@ -11,7 +11,12 @@ import {
     deleteDoc,
     DocumentReference
 } from 'firebase/firestore';
+
 import Course from '../models/Course.model';
+import Professor from '../models/Professor.model';
+import Student from '../models/Student.model';
+import { ProfessorInfo } from '../models/Professor.model';
+import { StudentInfo } from '../models/Student.model';
 import { CourseInfo } from '../models/Course.model';
 
 const getAllCourses = async (req: Request, res: Response) => {
@@ -30,7 +35,32 @@ const getAllCourses = async (req: Request, res: Response) => {
     }
 }
 
-const getSingleCourse = async (req: Request, res: Response) => {
+const getDepartmentCourses = async (req: Request, res: Response,next:NextFunction) => {
+    try {
+        let name:any;
+        if (req.originalUrl.includes("department")){name = req.params.name;}
+        else if(res.locals.professorData){name = res.locals.professorData.department}
+        else {throw(TypeError);}
+        const colRef = collection(firestore, 'courses') as CollectionReference<CourseInfo>;
+
+        const snapshot = await getDocs(colRef);
+
+        const courses: Array<CourseInfo> = [];
+        
+        snapshot.forEach(course => {
+            if(course.data().departmentsAvailableIn.includes(name)){
+                courses.push(course.data());
+            }
+        });
+
+        res.status(200).send(courses);
+    }
+    catch (err) {
+        res.status(500).send(`Error Retrieving Department Courses, error: ${err}`);
+    }
+}
+
+const getSingleCourse = async (req: Request, res: Response,next:NextFunction) => {
     const { code } = req.params;
 
     try {
@@ -39,7 +69,12 @@ const getSingleCourse = async (req: Request, res: Response) => {
         if (!courseDoc.exists())
             return res.status(404).send("Course Not Found.");
 
-        res.status(200).send(courseDoc.data());
+        res.locals.courseData = courseDoc.data();
+        if(!req.originalUrl.includes("/course/")){
+            res.status(200).send(res.locals.professorData);
+        }
+        next();
+
     }
     catch (err) {
         res.status(500).send(`Error Retrieving The Courese, error: ${err}`);
@@ -61,24 +96,52 @@ const addCourse = async (req: Request, res: Response) => {
     }
 }
 
-const updateCourse = async (req: Request, res: Response) => {
-    const updatedCourse = new Course({ ...req.body }).info();
-    const { code } = req.params;
-
+const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
+    let updatedCourse,code;
+    if (!req.originalUrl.includes("/course/")) {
+        const updatedCourse = new Course({ ...req.body }).info();
+        const code = req.params.code;
+    }
+    else{
+        updatedCourse = res.locals.courseData;
+        code = updatedCourse.code;
+        res.send(updatedCourse);
+    }
     try {
         const docRef = doc(firestore, 'courses', code) as DocumentReference<CourseInfo>;
         const docSnapshot = await getDoc<CourseInfo>(docRef);
 
         if (!docSnapshot.exists()) {
-            return res.status(404).send("Student Not Found.");
+            return res.status(404).send("Course Not Found.");
         }
-
         await updateDoc<CourseInfo>(docRef, updatedCourse);
 
-        res.status(200).send("Updated Course Successfully.");
+        if (!req.originalUrl.includes("/course/")){res.status(200).send("Updated Course Successfully.");}
+        next();
     }
     catch (err) {
         res.status(500).send(`Error Updating The Course, error: ${err}`);
+    }
+}
+const linkCourseToUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const tempCourse = new Course(res.locals.courseData);
+        let tempUser;
+
+        if(req.originalUrl.includes("/professor")){
+            tempUser = new Professor(res.locals.professorData);
+        }
+        else{
+            tempUser = new Student(res.locals.studentData)
+        }
+
+        tempUser.addCourse(tempCourse);
+        res.locals.courseData = tempCourse.info();
+        res.locals.userData = tempUser.info();
+        next();
+    }
+    catch (err) {
+        res.status(500).send(`Error Joining The Course, error: ${err}`);
     }
 }
 
@@ -88,9 +151,11 @@ const updateCourse = async (req: Request, res: Response) => {
 
 const courseController = {
     getAllCourses,
+    getDepartmentCourses,
     getSingleCourse,
     addCourse,
-    updateCourse
+    updateCourse,
+    linkCourseToUser
 };
 
 export default courseController;

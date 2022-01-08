@@ -3,38 +3,47 @@ import courseController from '../controllers/Course.controller';
 
 const courseRouter = express.Router();
 /**
- * @description get all students
- * @route /users/students
+ * @description get all courses
+ * @route /courses
  * @method GET
 */
 courseRouter.get('/', courseController.getAllCourses);
 
 /**
- * @description get single student
- * @route /users/students/:email
+ * @description get single course
+ * @route /courses/:email
  * @method GET
 */
 courseRouter.get('/:code', courseController.getSingleCourse);
 
 /**
- * @description add a student
- * @route /users/students
+ * @description get course by department
+ * @route /courses/department/:name
+ * @method GET
+*/
+courseRouter.get('/department/:name', courseController.getDepartmentCourses);
+
+/**
+ * @description add a course
+ * @route /courses
  * @method POST
 */
 courseRouter.post('/', courseController.addCourse);
 
 /**
- * @description update a student
- * @route /users/students/:email
+ * @description update a course
+ * @route /courses/:email
  * @method PUT
 */
 courseRouter.put('/:code', courseController.updateCourse);
 
 // /**
-//  * @description delete a student
-//  * @route /users/students/:email
+//  * @description delete a course
+//  * @route /courses/:email
 //  * @method DELETE
 // */
-// studentRouter.delete('/:email', studentController.deleteStudent);
+// courseRouter.delete('/:email', courseController.deletecourse);
+
+
 
 export default courseRouter;

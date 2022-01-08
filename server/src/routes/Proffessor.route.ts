@@ -1,4 +1,5 @@
 import express from 'express';
+import courseController from '../controllers/Course.controller';
 import professorController from '../controllers/Professor.controller';
 
 
@@ -44,32 +45,32 @@ professorRouter.delete('/:email', professorController.deleteProfessor);
  * @route /users/professors/:email/course
  * @method GET
  */
-
-/**
- * @description Get all courses the professor teaches
- * @route /users/professors/:email/course
- * @method GET
- */
-
-/**
- * @description Get a specific coure the professor teaches
- * @route /users/professors/:email/course/:code
- * @method GET
- */
+professorRouter.get('/:email/course', professorController.getSingleProfessor, professorController.getAllProfessorCourses);
 
 /**
  * @description Get all available courses the professor can teach in
  * @route /users/professors/:email/course/available
  * @method GET
  */
+professorRouter.get('/:email/course/available', professorController.getSingleProfessor, courseController.getDepartmentCourses);
+
+/**
+ * @description Get a specific course the professor teaches
+ * @route /users/professors/:email/course/:code
+ * @method GET
+ */
+professorRouter.get('/:email/course/:code', professorController.getSingleProfessor, professorController.getSingleProfessorCourse);
 
 /**
  * @description Join an available course
  * @route /users/professors/:email/course/available/:code
  * @method PUT
  */
-
-
+professorRouter.get('/:email/course/available/:code', professorController.getSingleProfessor,
+ courseController.getSingleCourse,
+ courseController.linkCourseToUser,
+ courseController.updateCourse, 
+ professorController.updateProfessor);
 
 
 export default professorRouter;
