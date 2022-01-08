@@ -34,8 +34,18 @@ export default class Student {
         return this.studentInfo;
     }
 
-    public addCourse(course:Course):void{
+    public addCourse(course:Course):Student{
         this.studentInfo.courseArray?.push(course);
-        course.addStudent(this);
+        // course.addStudent(this);
+        return this;
+    }
+
+    public removeCourses():Student{
+        this.studentInfo.courseArray = [];
+        return this;
+    }
+
+    public getCourses():Array<Course>|undefined{
+        return this.studentInfo.courseArray;
     }
 }

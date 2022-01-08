@@ -30,9 +30,17 @@ export default class Professor {
         return this.professorInfo;
     }
 
-    public addCourse(course:Course):void{
+    public addCourse(course:Course):Professor{
         this.professorInfo.courseArray?.push(course);
-        course.addProfessor(this);
+        return this;
     }
 
+    public removeCourses():Professor{
+        this.professorInfo.courseArray = [];
+        return this;
+    }
+
+    public getCourses():Array<Course>|undefined{
+        return this.professorInfo.courseArray;
+    }
 }

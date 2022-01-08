@@ -66,7 +66,8 @@ professorRouter.get('/:email/course/:code', professorController.getSingleProfess
  * @route /users/professors/:email/course/available/:code
  * @method PUT
  */
-professorRouter.get('/:email/course/available/:code', professorController.getSingleProfessor,
+professorRouter.get('/:email/course/available/:code', 
+ professorController.getSingleProfessor,
  courseController.getSingleCourse,
  courseController.linkCourseToUser,
  courseController.updateCourse, 

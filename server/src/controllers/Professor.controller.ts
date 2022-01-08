@@ -25,6 +25,7 @@ const getAllProfessors = async (req: Request, res: Response) => {
         const professors: Array<ProfessorInfo> = [];
         snapshot.forEach(professor => professors.push(professor.data()));
 
+
         res.status(200).send(professors);
     }
     catch (err) {

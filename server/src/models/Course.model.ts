@@ -32,13 +32,30 @@ export default class Course {
         return this.courseInfo;
     }
 
-    public addStudent(student:Student):void{
+    public addStudent(student:Student):Course{
         let temp = new studentCourseData(student);
         this.courseInfo.studentArray?.push(temp);
+        return this;
     }
 
-    public addProfessor(professor:Professor):void{
+    public addProfessor(professor:Professor):Course{
         this.courseInfo.professorArray?.push(professor);
+        professor.addCourse(this.removeProfessorCourses());
+        return this;
+    }
+
+    public getProfessor():Array<Professor>|undefined{
+        return this.courseInfo.professorArray;
+    }
+
+    public removeProfessorCourses(){
+        // console.log(this.courseInfo.professorArray?.[0]);
+        this.courseInfo.professorArray?.forEach((prof)=>{
+            prof = prof.removeCourses();
+            // console.log(prof);
+        });
+        // console.log(this.courseInfo.professorArray?.[0])
+        return this;
     }
 }
 
@@ -51,10 +68,12 @@ interface StudentData{
 class studentCourseData{
     private studentData: StudentData;
     constructor(student:Student){
+        let temp = student;
+        temp.removeCourses();
         this.studentData = {
             studentAttendance: 0,
             studentGrade: 0,
-            student: student
+            student: temp
         }
         //TODO: Make the student info only accessable by the professor so that the professor 
         //can change the data with functions in his model

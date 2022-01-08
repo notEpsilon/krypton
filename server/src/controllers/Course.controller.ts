@@ -97,17 +97,17 @@ const addCourse = async (req: Request, res: Response) => {
 }
 
 const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
-    let updatedCourse,code;
-    if (!req.originalUrl.includes("/course/")) {
-        const updatedCourse = new Course({ ...req.body }).info();
-        const code = req.params.code;
-    }
-    else{
-        updatedCourse = res.locals.courseData;
-        code = updatedCourse.code;
-        res.send(updatedCourse);
-    }
     try {
+        let updatedCourse,code;
+        if (!req.originalUrl.includes("/course/")) {
+            updatedCourse = new Course({ ...req.body }).info();
+            code = req.params.code;
+        }
+        else{
+            updatedCourse = res.locals.courseData;
+            code = updatedCourse.code;
+        }
+
         const docRef = doc(firestore, 'courses', code) as DocumentReference<CourseInfo>;
         const docSnapshot = await getDoc<CourseInfo>(docRef);
 
@@ -125,19 +125,27 @@ const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
 }
 const linkCourseToUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const tempCourse = new Course(res.locals.courseData);
-        let tempUser;
+        let tempCourse = new Course(res.locals.courseData);
+        let tempUser:Professor|Student;
 
         if(req.originalUrl.includes("/professor")){
             tempUser = new Professor(res.locals.professorData);
+            tempCourse = tempCourse.addProfessor(tempUser.removeCourses())
         }
         else{
             tempUser = new Student(res.locals.studentData)
+            tempCourse = tempCourse.addStudent(tempUser.removeCourses());
         }
 
-        tempUser.addCourse(tempCourse);
         res.locals.courseData = tempCourse.info();
+        console.log(res.locals.courseData.professorArray[0].professorInfo)
+        
         res.locals.userData = tempUser.info();
+        console.log(res.locals.userData.courseArray[0].courseInfo.professorArray[0].professorInfo);
+
+        res.send(res.locals.userData);
+
+
         next();
     }
     catch (err) {
