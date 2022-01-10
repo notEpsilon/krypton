@@ -42,10 +42,10 @@ const getSingleProfessor = async (req: Request, res: Response,next: NextFunction
         if (!professorDoc.exists())
             return res.status(404).send("Professor Not Found.");
 
-        res.locals.professorData = professorDoc.data();
         if(!req.originalUrl.includes("/course")){
             res.status(200).send(res.locals.professorData);
         }
+        res.locals.professorData = professorDoc.data();
         next();
 
     }

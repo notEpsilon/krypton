@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentInfo } from '../models/Student.model';
 import { firestore } from '../firebase/firebase.util';
 import Student from '../models/Student.model';
@@ -13,6 +13,7 @@ import {
     deleteDoc,
     DocumentReference
 } from 'firebase/firestore';
+import { CourseInfo } from '../models/Course.model';
 
 const getAllStudents = async (req: Request, res: Response) => {
     try {
@@ -30,7 +31,7 @@ const getAllStudents = async (req: Request, res: Response) => {
     }
 };
 
-const getSingleStudent = async (req: Request, res: Response) => {
+const getSingleStudent = async (req: Request, res: Response, next:NextFunction) => {
     const { email } = req.params;
 
     try {
@@ -38,11 +39,36 @@ const getSingleStudent = async (req: Request, res: Response) => {
 
         if (!studentDoc.exists())
             return res.status(404).send("Student Not Found.");
-
+        if(!req.originalUrl.includes("/course")){
         res.status(200).send(studentDoc.data());
+        }
+        res.locals.studentData = studentDoc.data();
+
     }
     catch (err) {
         res.status(500).send(`Error Retrieving The Student, error: ${err}`);
+    }
+};
+
+const getSinglePendingStudent = async (req: Request, res: Response,next:NextFunction) => {
+    const { email } = req.params;
+
+    try {
+        const studentDoc = await getDoc(doc(firestore, 'pendingStudents', email));
+
+        if (!studentDoc.exists())
+            return res.status(404).send("Pending student Not Found.");
+
+        if(req.method === "GET"){
+            res.status(200).send(studentDoc.data());
+        }
+        else{
+            res.locals.pendingStudentInfo = studentDoc.data();
+        }
+        next();
+    }
+    catch (err) {
+        res.status(500).send(`Error Retrieving the pending student, error: ${err}`);
     }
 };
 
@@ -52,11 +78,23 @@ const addStudent = async (req: Request, res: Response) => {
     try {
         const docRef = doc(firestore, 'pendingStudents', studentInfo.email) as DocumentReference<StudentInfo>;
 
-        // TODO: if IT accepts the student => request(POST -> /users/students/verify, reqBody: pendingStudent)
-
         await setDoc<StudentInfo>(docRef, studentInfo);
 
         res.status(200).send("Student Added to Pending Requests Successfully.");
+    }
+    catch (err) {
+        res.status(500).send(`Error Adding a New Student to The Pending Requests, error: ${err}`);
+    }
+};
+
+const acceptStudent = async (req: Request, res: Response, next:NextFunction) => {
+    res.locals.pendingStudentInfo.isVerified = true;
+    let studentInfo = new Student(res.locals.pendingStudentInfo).info();
+    try {
+        const docRef = doc(firestore, 'students', studentInfo.email) as DocumentReference<StudentInfo>;
+        await setDoc<StudentInfo>(docRef, studentInfo);
+
+        next();
     }
     catch (err) {
         res.status(500).send(`Error Adding a New Student to The Pending Requests, error: ${err}`);
@@ -108,12 +146,79 @@ const deleteStudent = async (req: Request, res: Response) => {
     }
 };
 
+const deletePendingStudent = async (req: Request, res: Response) => {
+    const { email } = req.params;
+
+    try {
+        const docRef = doc(firestore, 'pendingStudents', email) as DocumentReference<StudentInfo>;
+        const docSnapshot = await getDoc<StudentInfo>(docRef);
+
+        if (!docSnapshot.exists()) {
+            return res.status(404).send("Pending Student Already Doesn't Exist.");
+        }
+
+        await deleteDoc(docRef);
+
+        if(req.method === "DELETE"){
+            res.status(200).send("Pending Student Deleted Successfully.");
+        }
+        else{
+            res.status(200).send("Pending Student Accepted Successfully.");
+        }
+    }
+    catch (err) {
+        res.status(500).send(`Error Deleting The Student, error: ${err}`);
+    }
+};
+
+const getAllStudentCourses = (req: Request, res: Response, next:NextFunction) => {
+    try {
+        if(res.locals.studentData){
+            res.status(200).send(res.locals.studentData.courseArray);
+        }
+        else{
+            res.status(500).send("Error Retrieving Courses")
+        }
+        next();
+    } 
+    catch (err) {
+        res.status(500).send(`Error Retrieving All Professor's Courses, error: ${err}`)
+    }
+}
+
+const getSingleStudentCourse = async (req: Request, res: Response,next:NextFunction) => {
+    const { code } = req.params;
+    try {
+        if(res.locals.studentData){
+            const courseArray:Array<CourseInfo>= res.locals.professorData.courseArray;
+            courseArray.forEach((course)=>{
+                if(course.code===code){
+                    res.status(200).send(course);
+                    }
+                })
+            res.status(400).send("Course not found");
+            }
+        else{
+            res.status(500).send("Error Retrieving Courses")
+        }
+        next();
+    } 
+    catch (err) {
+        res.status(500).send(`Error Retrieving Professor's Course, error: ${err}`)
+    }
+}
+
 const studentController = {
     getAllStudents,
     getSingleStudent,
     addStudent,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    getSinglePendingStudent,
+    acceptStudent,
+    deletePendingStudent,
+    getAllStudentCourses,
+    getSingleStudentCourse
 };
 
 export default studentController;

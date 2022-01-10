@@ -40,6 +40,7 @@ const getDepartmentCourses = async (req: Request, res: Response,next:NextFunctio
         let name:any;
         if (req.originalUrl.includes("department")){name = req.params.name;}
         else if(res.locals.professorData){name = res.locals.professorData.department}
+        else if(res.locals.studentData){name = res.locals.studentData.department}
         else {throw(TypeError);}
         const colRef = collection(firestore, 'courses') as CollectionReference<CourseInfo>;
 
@@ -124,6 +125,9 @@ const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
     }
 }
 const linkCourseToUser = async (req: Request, res: Response, next: NextFunction) => {
+    // Link the course to the professor
+    // professor course array has different data type 
+    // data type new can use search by email
     try {
         let tempCourse = new Course(res.locals.courseData);
         let tempUser:Professor|Student;
