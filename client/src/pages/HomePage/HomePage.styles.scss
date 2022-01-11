@@ -1,0 +1,56 @@
+.main {
+    font-family: 'El Messiri';
+    font-weight: 'bold';
+    font-size: 3.6rem;
+    letter-spacing: 2px;
+}
+
+.gradient {
+    background: linear-gradient(120deg, #FF0000, #0029FF);
+    background-clip: text;
+    color: transparent;
+}
+
+.home-page {
+    
+    .left {
+        .title {
+            font-size: 2.7rem;
+        }
+
+        .cta-1 {
+            margin-right: 14px;
+        }
+
+        .cta-2 {
+            text-align: center;
+
+            .ico-github {
+                height: 21px;
+                width: 21px;
+            }
+
+            span {
+                margin-left: 9px;
+                text-align: center;
+                padding-top: 12px;
+            }
+        }
+    }
+
+    .right {
+        .home-img {
+            max-width: 100%;
+            max-height: 100%;
+            height: 70%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        & .left {
+            padding-bottom: 0 !important;
+            align-items: center !important;
+            text-align: center;
+        }
+    }
+}
