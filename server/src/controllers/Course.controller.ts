@@ -115,6 +115,7 @@ const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
         if (!docSnapshot.exists()) {
             return res.status(404).send("Course Not Found.");
         }
+        // console.log(updatedCourse);
         await updateDoc<CourseInfo>(docRef, updatedCourse);
 
         if (!req.originalUrl.includes("/course/")){res.status(200).send("Updated Course Successfully.");}
@@ -124,31 +125,27 @@ const updateCourse = async (req: Request, res: Response,next: NextFunction) => {
         res.status(500).send(`Error Updating The Course, error: ${err}`);
     }
 }
+
 const linkCourseToUser = async (req: Request, res: Response, next: NextFunction) => {
-    // Link the course to the professor
-    // professor course array has different data type 
-    // data type new can use search by email
     try {
         let tempCourse = new Course(res.locals.courseData);
         let tempUser:Professor|Student;
 
         if(req.originalUrl.includes("/professor")){
+            
             tempUser = new Professor(res.locals.professorData);
-            tempCourse = tempCourse.addProfessor(tempUser.removeCourses())
+            tempCourse = tempCourse.addProfessor(tempUser,req.body.lectureHall,req.body.lectureTime,req.body.lectureDuration);
+            tempUser = tempUser.addCourse(tempCourse);
         }
         else{
             tempUser = new Student(res.locals.studentData)
-            tempCourse = tempCourse.addStudent(tempUser.removeCourses());
+            tempCourse = tempCourse.addStudent(tempUser);
+            tempUser = tempUser.addCourse(tempCourse);
         }
 
-        res.locals.courseData = tempCourse.info();
-        console.log(res.locals.courseData.professorArray[0].professorInfo)
+        res.locals.courseData = tempCourse.stringifyArrays().info();
         
-        res.locals.userData = tempUser.info();
-        console.log(res.locals.userData.courseArray[0].courseInfo.professorArray[0].professorInfo);
-
-        res.send(res.locals.userData);
-
+        res.locals.userData = tempUser.stringifyArrays().info();
 
         next();
     }

@@ -1,5 +1,5 @@
-import Professor from "./Professor.model";
-import Student from "./Student.model";
+import Professor, { ProfessorInfo } from "./Professor.model";
+import Student, { StudentInfo } from "./Student.model";
 
 export interface CourseInfo {
     code: string;
@@ -7,7 +7,7 @@ export interface CourseInfo {
     departmentsAvailableIn: Array<string>;
     courseTotalSessions:Number;
     availableSeat:Number;
-    professorArray?: Array<Professor>;
+    professorArray?: Array<professorCourseData>;
     studentArray?: Array<studentCourseData>;
 };
 
@@ -28,6 +28,12 @@ export default class Course {
 
     }
 
+    public stringifyArrays(): Course{
+        this.courseInfo.professorArray = JSON.parse(JSON.stringify(this.courseInfo.professorArray));
+        this.courseInfo.studentArray = JSON.parse(JSON.stringify(this.courseInfo.studentArray));
+        return this;
+    }
+
     public info(): CourseInfo {
         return this.courseInfo;
     }
@@ -38,46 +44,35 @@ export default class Course {
         return this;
     }
 
-    public addProfessor(professor:Professor):Course{
-        this.courseInfo.professorArray?.push(professor);
-        professor.addCourse(this.removeProfessorCourses());
+    public addProfessor(professor:Professor,lectureHall:string,lectureTime:string,lectureDuration:string):Course{
+        let temp = new professorCourseData(professor,lectureHall,lectureTime,lectureDuration);
+        this.courseInfo.professorArray?.push(temp);
         return this;
     }
 
-    public getProfessor():Array<Professor>|undefined{
-        return this.courseInfo.professorArray;
-    }
-
-    public removeProfessorCourses(){
-        // console.log(this.courseInfo.professorArray?.[0]);
-        this.courseInfo.professorArray?.forEach((prof)=>{
-            prof = prof.removeCourses();
-            // console.log(prof);
-        });
-        // console.log(this.courseInfo.professorArray?.[0])
-        return this;
-    }
 }
 
 interface StudentData{
     studentAttendance: number,
     studentGrade: number,
-    student:Student
+    student:StudentInfo
 }
 
 class studentCourseData{
     private studentData: StudentData;
     constructor(student:Student){
-        let temp = student;
-        temp.removeCourses();
+        let temp:StudentInfo = {
+            email: student.info().email,
+            faculty: student.info().faculty,
+            department: student.info().department,
+            gpa: student.info().gpa,
+            id: student.info().id
+        }
         this.studentData = {
             studentAttendance: 0,
             studentGrade: 0,
             student: temp
         }
-        //TODO: Make the student info only accessable by the professor so that the professor 
-        //can change the data with functions in his model
-        //TODO: Redesign this mess after a good sleep
     }
     
     public addStudentAttendance():void{
@@ -87,4 +82,37 @@ class studentCourseData{
     public setStudentGrade(grade:number):void{
         this.studentData.studentGrade = grade;
     }
+}
+
+interface ProfessorData{
+    lectureHall:string,
+    lectureTime:string,
+    lectureDuration:string,
+    professor:ProfessorInfo
+}
+
+class professorCourseData{
+    private professorData: ProfessorData;
+    constructor(professor:Professor,lectureHall:string,lectureTime:string,lectureDuration:string){
+        let temp:ProfessorInfo = {
+            email: professor.info().email,
+            faculty: professor.info().faculty,
+            department: professor.info().department,
+            salary: professor.info().salary,
+            id: ""
+        }
+        this.professorData = {
+            lectureHall: lectureHall,
+            lectureDuration: lectureDuration,
+            lectureTime: lectureTime,
+            professor: temp
+        }
+    }
+    
+    public setData(lectureHall:string,lectureTime:string,lectureDuration:string):void{
+        this.professorData.lectureHall = lectureHall;
+        this.professorData.lectureTime = lectureTime;
+        this.professorData.lectureDuration = lectureDuration;
+    }
+    
 }

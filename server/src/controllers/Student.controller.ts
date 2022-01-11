@@ -40,10 +40,10 @@ const getSingleStudent = async (req: Request, res: Response, next:NextFunction) 
         if (!studentDoc.exists())
             return res.status(404).send("Student Not Found.");
         if(!req.originalUrl.includes("/course")){
-        res.status(200).send(studentDoc.data());
+            res.status(200).send(studentDoc.data());
         }
         res.locals.studentData = studentDoc.data();
-
+        next();
     }
     catch (err) {
         res.status(500).send(`Error Retrieving The Student, error: ${err}`);
@@ -102,9 +102,15 @@ const acceptStudent = async (req: Request, res: Response, next:NextFunction) => 
 };
 
 const updateStudent = async (req: Request, res: Response) => {
-    const updatedStudent = new Student({ ...req.body }).info();
-    const { email } = req.params;
-
+    let updatedStudent,email;
+    if (!req.originalUrl.includes("/course/")) {
+        updatedStudent = new Student({ ...req.body }).info();
+        email = req.params.email;
+    }
+    else{
+        updatedStudent = res.locals.userData;
+        email = updatedStudent.email;
+    }
     try {
         const docRef = doc(firestore, 'students', email) as DocumentReference<StudentInfo>;
         const docSnapshot = await getDoc<StudentInfo>(docRef);
@@ -116,7 +122,7 @@ const updateStudent = async (req: Request, res: Response) => {
         if (email !== updatedStudent.email) {
             return res.status(400).send("You Can't Update Your Email Address.");
         }
-
+        
         await updateDoc<StudentInfo>(docRef, updatedStudent);
 
         res.status(200).send("Updated Student Successfully.");

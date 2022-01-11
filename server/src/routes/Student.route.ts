@@ -53,13 +53,17 @@ studentRouter.get('/:email/course/available', studentController.getSingleStudent
 */
 studentRouter.get('/:email/course/:code', studentController.getSingleStudent, studentController.getSingleStudentCourse);
 
-
-
 /**
  * @description Join a course
  * @route /users/students/:email/course/available/:code
  * @method PUT
 */
+studentRouter.put('/:email/course/available/:code', 
+ studentController.getSingleStudent,
+ courseController.getSingleCourse,
+ courseController.linkCourseToUser,
+ courseController.updateCourse, 
+ studentController.updateStudent);
 
 /**
  * @description Add a pending student

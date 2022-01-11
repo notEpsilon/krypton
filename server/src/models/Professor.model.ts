@@ -30,6 +30,11 @@ export default class Professor {
         return this.professorInfo;
     }
 
+    public stringifyArrays(): Professor{
+        this.professorInfo.courseArray = JSON.parse(JSON.stringify(this.professorInfo.courseArray));
+        return this;
+    }
+
     public addCourse(course:Course):Professor{
         this.professorInfo.courseArray?.push(course);
         return this;

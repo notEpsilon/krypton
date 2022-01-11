@@ -34,6 +34,11 @@ export default class Student {
         return this.studentInfo;
     }
 
+    public stringifyArrays(): Student{
+        this.studentInfo.courseArray = JSON.parse(JSON.stringify(this.studentInfo.courseArray));
+        return this;
+    }
+
     public addCourse(course:Course):Student{
         this.studentInfo.courseArray?.push(course);
         // course.addStudent(this);

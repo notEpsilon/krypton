@@ -74,11 +74,11 @@ const updateProfessor = async (req: Request, res: Response) => {
     if (!req.originalUrl.includes("/course/")) {
         updatedProfessor = new Professor({ ...req.body }).info();
         email = req.params.email;
-    }
+        }
     else{
-        updatedProfessor = res.locals.userData.info();
-        email = updatedProfessor.code;
-    }
+        updatedProfessor = res.locals.userData;
+        email = updatedProfessor.email;
+        }
 
     try {
         const docRef = doc(firestore, 'professors', email) as DocumentReference<ProfessorInfo>;
