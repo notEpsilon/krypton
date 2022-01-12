@@ -18,7 +18,7 @@ const sendMail = (email: string, password: string) => {
     const mailOptions: SendMailOptions = {
         from: process.env.MAILER_EMAIL,
         to: email,
-        subject: 'Krypton System User Authentication Password',
+        subject: 'Krypton Camp User Authentication Password',
         text: `Welcome ${email}!\nYour Password is: ${password}`
     };
 

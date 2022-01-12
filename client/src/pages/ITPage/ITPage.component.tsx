@@ -18,7 +18,7 @@ const ITPage: React.FC = () => {
 
     return (
         <Card>
-            <Card.Header>Didn't Pay Tuition</Card.Header>
+            <Card.Header className="text-center">Didn't Pay Tuition</Card.Header>
             <ListGroup variant="flush">
                 {
                     didntPay.map((dp, idx) => <ListGroup.Item key={idx}><TuitionCard data={dp} editDidntPay={setDidntPay} /></ListGroup.Item>)

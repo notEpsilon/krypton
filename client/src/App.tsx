@@ -3,6 +3,7 @@ import { auth } from './firebase/firebase.util';
 import { Routes, Route } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import ITPage from './pages/ITPage/ITPage.component';
+import Search from './pages/Search/Search.component';
 import HomePage from './pages/HomePage/HomePage.component';
 import LoginPage from './pages/LoginPage/LoginPage.component';
 import SignupPage from './pages/SignupPage/SignupPage.component';
@@ -43,6 +44,7 @@ const App: React.FC = () => {
         <Route path='/login' element={<LoginPage navHeight={height} />} />
         <Route path='/it' element={<ITPage />} />
         <Route path='/it/pending' element={<PendingStudents />} />
+        <Route path='/it/search' element={<Search navHeight={height} />} />
       </Routes>
     </div>
   );

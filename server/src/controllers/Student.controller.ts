@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 import { StudentInfo } from '../models/Student.model';
-import { firestore } from '../firebase/firebase.util';
+import { firestore, auth } from '../firebase/firebase.util';
 import { CollectionReference, DocumentReference } from 'firebase-admin/firestore';
 import Student from '../models/Student.model';
+import sendMail from '../mail/mailer.util';
 
 const getAllStudents = async (req: Request, res: Response) => {
     try {
@@ -65,13 +68,25 @@ const addVerifiedStudent = async (req: Request, res: Response) => {
         const docRef = firestore.doc(`students/${studentInfo.email}`) as DocumentReference<StudentInfo>;
 
         if ((await docRef.get()).exists)
-            return res.status(500).send("This Email Already Exists as a Pending Student.");
+            return res.status(500).send("This Email Already Exists as a Student.");
 
-        docRef.set(studentInfo);
+        const password = randomBytes(6).toString('hex');
+        const hashed = await bcrypt.hash(password, 10);
+
+        docRef.set({ ...studentInfo, password: hashed }).catch(err => console.error(err));
         
-        await firestore.doc(`pendingStudents/${studentInfo.email}`).delete();
+        firestore.doc(`pendingStudents/${studentInfo.email}`).delete().catch(err => console.error(err));
 
-        res.status(201).send("Student Added Successfully.");
+        auth.createUser({
+            email: studentInfo.email,
+            password: password,
+            emailVerified: true,
+            disabled: false
+        })
+
+        sendMail(studentInfo.email, password);
+
+        res.status(201).send("Student Verified Successfully.");
     }
     catch (err) {
         res.status(500).send(`Error Adding a New Student, error: ${err}`);

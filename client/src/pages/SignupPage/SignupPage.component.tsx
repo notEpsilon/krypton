@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SignupPage.styles.scss';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import EmailValidator from 'email-validator';
 import {
     Container,
@@ -39,6 +40,7 @@ const SignupPage: React.FC<IProps> = ({ navHeight }) => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [dep, setDep] = useState<string>("Choose Department");
+    const navigate = useNavigate();
 
     const handleClick1 = (e: React.MouseEvent<HTMLElement, MouseEvent>, f: string) => {
         setFaculty(prev => f);
@@ -72,13 +74,13 @@ const SignupPage: React.FC<IProps> = ({ navHeight }) => {
         }
 
         try {
-            await axios.post('http://localhost:4000/users/students', {
+            axios.post('http://localhost:4000/users/students', {
                 email,
                 name,
                 faculty,
                 department: dep,
                 type: 0
-            });
+            }).catch(err => console.error(err));
         }
         catch (e) {
             return alert("This Email Already Exists as a Pending Student.");
@@ -88,6 +90,8 @@ const SignupPage: React.FC<IProps> = ({ navHeight }) => {
         setEmail(prev => "");
         setFaculty(prev => "Choose Faculty");
         setDep(prev => "Choose Department");
+
+        navigate('/login');
     };
 
     return (

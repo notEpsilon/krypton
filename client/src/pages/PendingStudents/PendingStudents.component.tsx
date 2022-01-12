@@ -18,7 +18,7 @@ const PendingStudents: React.FC = () => {
 
     return (
         <Card>
-            <Card.Header>Pending Students</Card.Header>
+            <Card.Header className="text-center">Pending Students</Card.Header>
             <ListGroup variant="flush">
                 {
                     pending.map((ps, idx) => <ListGroup.Item key={idx}><PendingStudent data={ps} editPending={setPending} /></ListGroup.Item>)

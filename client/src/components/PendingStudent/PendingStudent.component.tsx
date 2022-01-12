@@ -11,7 +11,7 @@ interface IProps {
 const PendingStudent: React.FC<IProps> = ({ data, editPending }) => {
     const handleClick = async () => {
         try {
-            await axios.post('http://localhost:4000/users/students/verify', data);
+            axios.post('http://localhost:4000/users/students/verify', data).catch(err => console.error(err));
             editPending(prev => prev.filter(elem => elem.email !== data.email));
         }
         catch (err) {

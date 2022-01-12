@@ -38,6 +38,10 @@ const getNavLinks = (userType: number | undefined): Array<NavLink> => {
             {
                 title: 'Pending',
                 path: '/it/pending'
+            },
+            {
+                title: 'Search',
+                path: '/it/search'
             }
         ];
     }
