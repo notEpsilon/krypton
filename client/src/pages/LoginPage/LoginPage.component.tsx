@@ -40,6 +40,9 @@ const LoginPage: React.FC<IProps> = ({ navHeight }) => {
             const userType = await checkUserType(creds.user.email);
 
             if (userType === 2) navigate('/it');
+            else if (userType === 1) navigate('/professor');
+            else if (userType === 0) navigate('/student');
+            else alert('Error Occurred.');
         }
         catch (e) {
             return alert("Error Logging In, Consider Checking Your Email & Password.");

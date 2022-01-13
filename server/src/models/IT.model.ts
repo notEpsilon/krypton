@@ -1,12 +1,10 @@
-import User from '../models/User.model';
-
 export interface ITInfo {
     name: string;
     email: string;
     type?: 2;
 };
 
-export default class Student {
+export default class IT {
     private itInfo: ITInfo;
     public static readonly type: 2 = 2;
 

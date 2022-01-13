@@ -14,3 +14,9 @@ export type TPendingStudent = {
 export interface VerifiedStudent extends TPendingStudent {
     tuitionPaid: boolean; // also hashed password, courses, absence
 };
+
+export interface Course {
+    name: string;
+    faculty: string;
+    department: string[];
+};

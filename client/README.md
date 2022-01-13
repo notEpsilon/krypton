@@ -1,6 +1,6 @@
-# Krypton
+# Getting Started with Create React App
 
-![krypton image](https://gcdn.pbrd.co/images/yfQ3j1RFcO3s.png?o=1)<br/>
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

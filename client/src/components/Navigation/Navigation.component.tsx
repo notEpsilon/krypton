@@ -22,13 +22,18 @@ const getNavLinks = (userType: number | undefined): Array<NavLink> => {
                 path: '/signup'
             },
             {
-            title: 'Log In',
-            path: '/login'
+                title: 'Log In',
+                path: '/login'
             }
         ];
     }
     else if (userType === 0) {
-        return [];
+        return [
+            {
+                title: 'Absence',
+                path: '/student/absence'
+            }
+        ];
     }
     else if (userType === 1) {
         return [];
@@ -42,6 +47,10 @@ const getNavLinks = (userType: number | undefined): Array<NavLink> => {
             {
                 title: 'Search',
                 path: '/it/search'
+            },
+            {
+                title: 'Add Course',
+                path: '/it/addcourse'
             }
         ];
     }
