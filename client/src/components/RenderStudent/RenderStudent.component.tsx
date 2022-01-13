@@ -6,7 +6,9 @@ const RenderStudent: React.FC<{ data: any }> = ({ data }) => {
             {
                 Object.entries(data).map(([k, v], idx) => {
                     return (
-                        k === 'type' ? null : (<><div key={idx}>{k}: {v === true ? 'true' : (v === false ? 'false' : v)}</div><hr /><hr /></>)
+                        k === 'type' ? null : (k === 'courses' ? (<>
+                            <div key={idx}>{k}: {(v as any).map((crs: any, nidx: number) => (<div key={nidx}>{crs.name} | {crs.grade} | {crs.absenceCount}</div>))}</div><hr />
+                        </>) : (<><div key={idx}>{k}: {v === true ? 'true' : (v === false ? 'false' : v)}</div><hr /></>))
                     );
                 })
             }

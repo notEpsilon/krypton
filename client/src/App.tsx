@@ -7,11 +7,12 @@ import Search from './pages/Search/Search.component';
 import HomePage from './pages/HomePage/HomePage.component';
 import LoginPage from './pages/LoginPage/LoginPage.component';
 import SignupPage from './pages/SignupPage/SignupPage.component';
-import AddCoursePage from './pages/AddCoursePage/AddCoursePage.component';
 import AbsencePage from './pages/AbsencePage/AbsencePage.component';
 import StudentPage from './pages/StudentPage/StudentPage.component';
 import Navigation from './components/Navigation/Navigation.component';
 import { checkUserType } from './pages/LoginPage/LoginPage.component';
+import ProfessorPage from './pages/ProfessorPage/ProfessorPage.component';
+import AddCoursePage from './pages/AddCoursePage/AddCoursePage.component';
 import PendingStudents from './pages/PendingStudents/PendingStudents.component';
 
 const App: React.FC = () => {
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         <Route path='/it/pending' element={<PendingStudents />} />
         <Route path='/it/search' element={<Search navHeight={height} />} />
         <Route path='/it/addcourse' element={<AddCoursePage navHeight={height} />} />
+        <Route path='/professor' element={<ProfessorPage user={user} navHeight={height} />} />
         <Route path='/student' element={<StudentPage user={user} navHeight={height} />} />
         <Route path='/student/absence' element={<AbsencePage user={user} navHeight={height} />} />
       </Routes>

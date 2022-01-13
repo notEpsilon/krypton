@@ -63,7 +63,7 @@ const AddCoursePage: React.FC<IProps> = ({ navHeight }) => {
             name: courseName,
             faculty: faculty,
             department: [dep]
-        });
+        }).catch(err => console.log(err));
 
         setCourseName("");
         setFaculty("Choose Faculty");

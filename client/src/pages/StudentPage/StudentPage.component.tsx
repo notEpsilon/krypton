@@ -47,7 +47,7 @@ const StudentPage: React.FC<IProps> = ({ navHeight, user }) => {
             <Card.Header className="text-center">Available Courses</Card.Header>
             <ListGroup variant="flush">
                 {
-                    courses.map((course, idx) => <ListGroup.Item key={idx}><RenderCourse data={course} /></ListGroup.Item>)
+                    courses.map((course, idx) => <ListGroup.Item key={idx}><RenderCourse data={course} mail={user && user.email} /></ListGroup.Item>)
                 }
             </ListGroup>
         </Card>

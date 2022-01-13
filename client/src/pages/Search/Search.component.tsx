@@ -39,7 +39,7 @@ const Search: React.FC<{ navHeight: number }> = ({ navHeight }) => {
             <Card style={{ width: '18rem', minHeight: '20rem' }}>
                 <Card.Body className="text-center">Search Users</Card.Body>
                 {
-                    data ? <RenderData data={data} /> : null // TODO: Support Course Rendering
+                    data ? <RenderData data={data} /> : null
                 }
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>

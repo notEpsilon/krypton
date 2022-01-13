@@ -20,3 +20,9 @@ export interface Course {
     faculty: string;
     department: string[];
 };
+
+export interface PCourse {
+    name: string;
+    grade: number;
+    absenceCount: number;
+};

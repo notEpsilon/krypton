@@ -1,5 +1,5 @@
-interface Course {
-    courseName: string;
-    faculty: string;
-    department: string;
+export default interface Course {
+    name: string;
+    grade: number;
+    absenceCount: number;
 };

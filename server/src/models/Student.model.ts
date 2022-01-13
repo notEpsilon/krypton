@@ -1,10 +1,11 @@
 import User from '../models/User.model';
+import Course from './Course.model';
 
 export interface StudentInfo extends User {
     faculty: string;
     department: string;
     gpa: number;
-    courses: Array<string>;
+    courses: Array<Course>;
     tuitionPaid: boolean;
     type?: 0;
 };

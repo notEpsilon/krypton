@@ -36,7 +36,12 @@ const getNavLinks = (userType: number | undefined): Array<NavLink> => {
         ];
     }
     else if (userType === 1) {
-        return [];
+        return [
+            {
+                title: 'Search Student',
+                path: '/it/search'
+            }
+        ];
     }
     else {
         return [
